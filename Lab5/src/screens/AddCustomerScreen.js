@@ -30,7 +30,7 @@ export default function AddCustomerScreen({ navigation }) {
                 <Text style={styles.label}>Customer Name *</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder='Input your customer name'
+                    placeholder="Input your customer's name"
                     placeholderTextColor="#999"
                     onChangeText={setName}
                 />

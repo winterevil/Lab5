@@ -5,6 +5,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import HomeScreen from './HomeScreen';
 import SettingScreen from './SettingScreen';
 import CustomerScreen from './CustomerScreen';
+import TransactionScreen from './TransactionScreen';
 
 const EmptyScreen = () => null;
 
@@ -58,7 +59,7 @@ export default function MainTab() {
             })}
         >
             <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarLabel: 'Home' }} />
-            <Tab.Screen name="Transaction" component={EmptyScreen} options={{ tabBarLabel: 'Transaction' }} />
+            <Tab.Screen name="Transaction" component={TransactionScreen} options={{ tabBarLabel: 'Transaction' }} />
             <Tab.Screen name="Customer" component={CustomerScreen} options={{ tabBarLabel: 'Customer' }} />
             <Tab.Screen name="Setting" component={SettingScreen} options={{ tabBarLabel: 'Setting' }} />
         </Tab.Navigator>
