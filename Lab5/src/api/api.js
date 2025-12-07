@@ -81,3 +81,51 @@ export const getTransactionById = async (id) => {
     const res = await api.get(`/transactions/${id}`);
     return res.data;
 }
+
+export const getCustomerById = async (id) => {
+    const res = await api.get(`/customers/${id}`);
+    return res.data;
+}
+
+export const updateCustomer = async (id, name, phone, token) => {
+    const res = await api.put(`/customers/${id}`, { name, phone }, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    return res.data;
+}
+
+export const deleteCustomer = async (id, token) => {
+    const res = await api.delete(`/customers/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    return res.data;
+}
+
+export const addTransaction = async (token, customerId, services) => {
+    const res = await api.post('/transactions', {
+        customerId: customerId,
+        services: services
+    }, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    return res.data;
+}
+
+export const deleteTransaction = async (token, id) => {
+    const res = await api.delete(`/transactions/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    return res.data;
+}

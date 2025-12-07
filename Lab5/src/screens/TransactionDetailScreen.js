@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { getTransactionById } from '../api/api';
+import { deleteTransaction, getTransactionById } from '../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -8,6 +8,7 @@ export default function TransactionDetailScreen({ route, navigation }) {
     const { id } = route.params;
     const [transaction, setTransaction] = useState(null);
     const [showMenu, setShowMenu] = useState(false);
+    const [showCancel, setShowCancel] = useState(false);
 
     useEffect(() => {
         const loadTransaction = async () => {
@@ -39,6 +40,22 @@ export default function TransactionDetailScreen({ route, navigation }) {
         return `${day}/${month}/${year} ${hour}:${minute}:${second}`;
     }
 
+    const handleCancel = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            console.log("Deleting transaction id:", id);
+
+            const res = await deleteTransaction(token, id);
+            console.log("Delete response:", res);
+
+            setShowCancel(false);
+            Alert.alert("Success", "Transaction canceled successfully");
+            navigation.goBack();
+        } catch (err) {
+            Alert.alert("Error", err.response?.data?.errors?.[0]?.msg || "Something went wrong");
+        }
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -57,18 +74,37 @@ export default function TransactionDetailScreen({ route, navigation }) {
                         onPress={() => {
                             setShowMenu(false);
                         }}>
-                        <Text style={styles.menuText}>Edit</Text>
+                        <Text style={styles.menuText}>See more details</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.menuItem}
                         onPress={() => {
                             setShowMenu(false);
+                            setShowCancel(true);
                         }}>
-                        <Text style={styles.menuText}>Delete</Text>
+                        <Text style={styles.menuText}>Cancel transaction</Text>
                     </TouchableOpacity>
                 </View>
             )}
 
+            {showCancel && (
+                <View style={styles.overlay}>
+                    <View style={styles.popupBox}>
+                        <Text style={styles.popupTitle}>Alert</Text>
+                        <Text style={styles.popupMessage}>Are you sure you want to cancel this transaction?
+                            This will affect the customer tracsaction information.
+                        </Text>
+                        <View style={styles.popupButtons}>
+                            <TouchableOpacity onPress={handleCancel} style={{ marginRight: 20 }}>
+                                <Text style={styles.deleteText}>YES</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => setShowCancel(false)}>
+                                <Text style={styles.deleteText}>CANCEL</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            )}
             <View style={styles.content}>
                 <View style={styles.card}>
                     <Text style={styles.label}>General Infromation</Text>
@@ -158,7 +194,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
     },
     menuText: {
-        fontSize: 16,
+        fontSize: 14,
     },
     content: {
         padding: 2,

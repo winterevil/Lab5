@@ -36,6 +36,7 @@ export default function CustomerScreen({ navigation }) {
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={styles.card}
+                        onPress={() => navigation.navigate('CustomerDetail', {id: item._id})}
                     >
                         <View style={styles.row}>
                             <Text style={styles.label}>Customer: </Text>

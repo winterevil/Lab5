@@ -1,56 +1,60 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, use } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { addCustomer } from '../api/api';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { getCustomerById, updateCustomer } from '../api/api';
+import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 
-export default function AddCustomerScreen({ navigation }) {
+export default function EditCustomerScreen({ navigation, route }) {
+    const { id } = route.params;
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
 
-    const handleAdd = async () => {
+    useEffect(() => {
+        (async () => {
+            const data = await getCustomerById(id);
+            setName(data.name);
+            setPhone(data.phone);
+        })();
+    }, []);
+
+    const handleEdit = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
-            console.log("TOKEN USED:", token);
-            await addCustomer(token, name, phone);
-            Alert.alert('Success', 'Customer added successfully');
+            await updateCustomer(id, name, phone, token);
+            Alert.alert('Success', 'Customer updated successfully');
             navigation.goBack();
         } catch (err) {
             const msg = err.response?.data?.errors?.[0]?.msg;
             Alert.alert("Error", msg || "Something went wrong");
         }
-    };
+    }
 
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Icon name="arrow-left" size={26} color="#fff" marginTop={40} />
+                    <Icon name='arrow-left' size={26} color='#fff' marginTop={40} />
                 </TouchableOpacity>
-                <Text style={styles.headerText}>Add Customer</Text>
+                <Text style={styles.headerText}>Edit customer</Text>
                 <View style={{ width: 26 }} />
             </View>
-
             <View style={styles.content}>
-                <Text style={styles.label}>Customer Name *</Text>
+                <Text style={styles.label}>Name</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="Input your customer's name"
-                    placeholderTextColor="#999"
-                    onChangeText={setName}
-                />
+                    placeholder='Input a customer name'
+                    placeholderTextColor='#999'
+                    onChangeText={setName}>{name}</TextInput>
 
-                <Text style={styles.label}>Phone *</Text>
+                <Text style={styles.label}>Phone</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder='Input phone number'
-                    placeholderTextColor="#999"
-                    onChangeText={setPhone}
-                    keyboardType='numeric'
-                />
+                    placeholder='Input a customer phone'
+                    placeholderTextColor='#999'
+                    onChangeText={setPhone}>{phone}</TextInput>
 
-                <TouchableOpacity style={styles.addButton} onPress={handleAdd}>
-                    <Text style={styles.addButtonText}>Add</Text>
+                <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
+                    <Text style={styles.editButtonText}>Update</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -95,14 +99,14 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         fontSize: 15,
     },
-    addButton: {
+    editButton: {
         backgroundColor: '#f04c4c',
         paddingVertical: 15,
         borderRadius: 10,
         alignItems: 'center',
         marginTop: 10,
     },
-    addButtonText: {
+    editButtonText: {
         color: '#ffffff',
         fontSize: 17,
         fontWeight: '600',

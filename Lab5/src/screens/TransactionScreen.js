@@ -73,11 +73,13 @@ export default function TransactionScreen({ navigation }) {
             />
             <TouchableOpacity
                 style={styles.addIconWrapper}
-                onPress={() => {}}
+                onPress={() =>
+                    navigation.navigate('AddTransaction')
+                }
             >
                 <Icon name="plus" size={28} color="#fff" />
             </TouchableOpacity>
-        </View>
+        </View >
     );
 }
 

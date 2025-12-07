@@ -7,6 +7,9 @@ import EditServiceScreen from "./src/screens/EditServiceScreen";
 import MainTab from "./src/screens/MainTab";
 import AddCustomerScreen from "./src/screens/AddCustomerScreen";
 import TransactionDetailScreen from "./src/screens/TransactionDetailScreen";
+import CustomerDetailScreen from "./src/screens/CustomerDetailScreen";
+import EditCustomerScreen from "./src/screens/EditCustomerScreen";
+import AddTransactionScreen from "./src/screens/AddTransactionScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +24,9 @@ export default function App() {
         <Stack.Screen name="EditService" component={EditServiceScreen} />
         <Stack.Screen name="AddCustomer" component={AddCustomerScreen} />
         <Stack.Screen name="TransactionDetail" component={TransactionDetailScreen} />
+        <Stack.Screen name="CustomerDetail" component={CustomerDetailScreen} />
+        <Stack.Screen name="EditCustomer" component={EditCustomerScreen} />
+        <Stack.Screen name="AddTransaction" component={AddTransactionScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
